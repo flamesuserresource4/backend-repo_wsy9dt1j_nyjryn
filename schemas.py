@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, HttpUrl
+from typing import Optional, List
 
 # Example schemas (replace with your own):
 
@@ -37,6 +37,30 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# District 2nd Cafe specific schemas
+
+class MenuItem(BaseModel):
+    """
+    Menu items for the cafe
+    Collection name: "menuitem"
+    """
+    name: str = Field(..., description="Menu item name")
+    description: Optional[str] = Field(None, description="Short description")
+    price: float = Field(..., ge=0, description="Price in local currency")
+    category: str = Field(..., description="Category, e.g., Coffee, Tea, Pastry")
+    image_url: HttpUrl = Field(..., description="Accessible image URL for the item")
+    tags: List[str] = Field(default_factory=list, description="Searchable tags")
+
+class ChatMessage(BaseModel):
+    """
+    Stores chat messages for the AI assistant
+    Collection name: "chatmessage"
+    """
+    session_id: str = Field(..., description="Session identifier for the chat")
+    role: str = Field(..., description="user or assistant")
+    text: str = Field(..., description="Message content")
+    language: Optional[str] = Field(None, description="IETF language tag, e.g., en, vi, ja")
 
 # Add your own schemas here:
 # --------------------------------------------------
